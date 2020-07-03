@@ -1,14 +1,11 @@
 <p align="center">
-    <img alt="jedi" src="docs/media/network.png"> 
+    <img alt="net" src="docs/media/network.png"> 
 </p>
 <p align="center">
-torpool implements a friendly API for utilizing requests over Tor socks proxy
+Tornix provides an easy way to manage streams through TorSocks via stream isolation
 </p>
 <p align="center">
-   <a href="https://goreportcard.com/report/github.com/imthaghost/torpool"><img src="https://goreportcard.com/badge/github.com/imthaghost/torpool"></a>
-   <a href="https://github.com/imthaghost/gitmoji-changelog">
-    <img src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg"alt="gitmoji-changelog">
-  </a>
+   <a href="https://goreportcard.com/report/github.com/imthaghost/tornix"><img src="https://goreportcard.com/badge/github.com/imthaghost/tornix"></a>
 </p>
 <br>
 
@@ -17,7 +14,7 @@ torpool implements a friendly API for utilizing requests over Tor socks proxy
 # 🚀 Installation
 ```bash
 
-go get github.com/imthaghost/torpool
+go get github.com/imthaghost/tornix
 
 ```
 # Overview
