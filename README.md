@@ -6,6 +6,8 @@ Tornix provides an easy way to manage streams through TorSocks via stream isolat
 </p>
 <p align="center">
    <a href="https://goreportcard.com/report/github.com/imthaghost/tornix"><img src="https://goreportcard.com/badge/github.com/imthaghost/tornix"></a>
+   <a href="https://travis-ci.org/imthaghost/tornix.svg?branch=master"><img src="https://travis-ci.org/imthaghost/tornix.svg?branch=master"></a>
+
 </p>
 <br>
 
