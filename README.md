@@ -2,7 +2,7 @@
     <img alt="net" src="docs/media/network.png"> 
 </p>
 <p align="center">
-Tornix provides an easy way to manage streams through TorSocks via stream isolation
+Tornix provides an easy interface to manage streams over Tor with Stream Isolation
 </p>
 <p align="center">
    <a href="https://goreportcard.com/report/github.com/imthaghost/tornix"><img src="https://goreportcard.com/badge/github.com/imthaghost/tornix"></a>
