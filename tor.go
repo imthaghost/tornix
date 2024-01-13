@@ -3,7 +3,6 @@ package tornix
 import (
 	"context"
 	"fmt"
-	"github.com/cretz/bine/tor"
 	"log"
 	"math/rand"
 	"net"
@@ -11,6 +10,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/cretz/bine/tor"
 )
 
 const MaxSessionsPerTorInstance = 1

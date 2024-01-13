@@ -3,8 +3,9 @@ package tornix
 import (
 	"errors"
 	"fmt"
-	"github.com/cretz/bine/tor"
 	"net"
+
+	"github.com/cretz/bine/tor"
 )
 
 // ReleasePort releases a port for use by the proxy.
