@@ -2,7 +2,11 @@
     <img alt="net" src="docs/media/network.png"> 
 </p>
 <p align="center">
-Tornix provides an easy interface to manage streams over Tor with Stream Isolation
+Tornix, an advanced yet user-friendly tool, revolutionizes the way users interact with the Tor network by offering sophisticated stream isolation capabilities.
+Designed for both privacy enthusiasts and security professionals, Tornix simplifies the process of securely routing various types of internet traffic through distinct Tor circuits. 
+This method not only enhances privacy by preventing the correlation of different activities but also bolsters security by isolating each data stream. 
+With Tornix, users gain the power to efficiently manage and protect their online presence on the Tor network, ensuring each action remains discreet and secure.
+
 </p>
 <p align="center">
    <a href="https://goreportcard.com/report/github.com/imthaghost/tornix"><img src="https://goreportcard.com/badge/github.com/imthaghost/tornix"></a>
@@ -24,18 +28,3 @@ go get github.com/imthaghost/tornix
 # Examples
 
 
-
-# 📝 License
-
-By contributing, you agree that your contributions will be licensed under its MIT License.
-
-In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
-
-# Contributors
-
-Contributions are welcome! Please see [Contributing Guide](https://github.com/imthaghost/goclone/blob/master/docs/CONTRIBUTING.md) for more details.
-
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/imthaghost"><img src="https://avatars3.githubusercontent.com/u/46610773?s=460&v=4" width="75px;" alt="Gary Frederick"/><br /><sub><b>Tha Ghost</b></sub></a><br /><a href="https://github.com/imthaghost/goclone/commits?author=imthaghost" title="Code">💻</a></td>
-  </tr>
