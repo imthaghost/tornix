@@ -17,16 +17,8 @@ With Tornix, users gain the power to efficiently manage and protect their online
 
 
 # Usage
-```go
-
-import (
-	"github.com/imthaghost/tornix"
-)
-
-```
 ```bash
 go get "github.com/imthaghost/tornix"
-
 ```
 
 # Examples
