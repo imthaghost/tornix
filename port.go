@@ -3,19 +3,20 @@ package tornix
 import (
 	"errors"
 	"fmt"
+	"github.com/cretz/bine/tor"
 	"net"
 )
 
 // ReleasePort releases a port for use by the proxy.
 func (m *Manager) ReleasePort(port int) {
 	// Close any active Tor instance using this port
-	if torInstance, exists := m.TorInstances[port]; exists {
+	if torInstance, exists := m.TorInstances.Load(port); exists {
 		// Assume that torInstance has a method to stop the Tor process
 		// You'll need to implement this based on how you're managing Tor instances
-		torInstance.Close() // This is a placeholder. Replace with actual method to stop the Tor process
+		torInstance.(*tor.Tor).Close() // This is a placeholder. Replace with actual method to stop the Tor process
 
 		// Remove the instance from the map after stopping it
-		delete(m.TorInstances, port)
+		m.TorInstances.Delete(port)
 	}
 
 	// Mark the port as available again

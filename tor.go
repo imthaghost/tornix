@@ -13,24 +13,36 @@ import (
 	"time"
 )
 
+const MaxSessionsPerTorInstance = 1
+
 // TorProxyFunc returns a proxy function for the Tor instance running on the host machine.
 func (m *Manager) TorProxyFunc(id string) (*url.URL, int, error) {
 
-	log.Println("TorProxyFunc called")
-	// Select a random Tor instance's SOCKS port
-	_, socksPort, err := m.SelectRandomTorInstance()
-	if err != nil {
-		return nil, 0, fmt.Errorf("error selecting Tor instance: %v", err)
+	var selectedPort int
+
+	// Determine whether to use an existing instance or create a new one
+	if GetSyncMapLength(m.Sessions) < MaxSessionsPerTorInstance*GetSyncMapLength(m.TorInstances) {
+		// Use an existing instance
+		_, selectedPort, _ = m.SelectRandomTorInstance()
+	} else {
+		log.Println("Creating new Tor instance")
+		// Create a new instance
+		var err error
+		_, selectedPort, err = m.CreateNewTorInstance()
+		if err != nil {
+
+			return nil, 0, fmt.Errorf("error creating a new Tor instance: %v", err)
+		}
 	}
 
-	// Create the proxy URL using the SOCKS port and unique credentials
-	proxyURLString := fmt.Sprintf("socks5://%s:x@127.0.0.1:%d", id, socksPort)
+	// Create the proxy URL using the selected Tor instance's SOCKS port
+	proxyURLString := fmt.Sprintf("socks5://127.0.0.1:%d", selectedPort)
 	proxyURL, err := url.Parse(proxyURLString)
 	if err != nil {
 		return nil, 0, fmt.Errorf("error parsing proxy URL: %w", err)
 	}
 
-	return proxyURL, socksPort, nil
+	return proxyURL, selectedPort, nil
 }
 
 // SelectRandomTorInstance selects a random Tor instance from the pool of active Tor instances.
@@ -38,21 +50,27 @@ func (m *Manager) SelectRandomTorInstance() (*tor.Tor, int, error) {
 	log.Println("SelectRandomTorInstance called")
 
 	// Check if there are active Tor instances
-	if len(m.TorInstances) == 0 {
+	if GetSyncMapLength(m.TorInstances) == 0 {
 		// create a new Tor instance
 		return m.CreateNewTorInstance()
 	}
 
 	// Existing logic to randomly select a Tor instance
 	var availablePorts []int
-	for port := range m.TorInstances {
-		availablePorts = append(availablePorts, port)
-	}
+	m.TorInstances.Range(func(key, value interface{}) bool {
+		// You need to assert the key's type if it's not an interface{}
+		if port, ok := key.(int); ok {
+			availablePorts = append(availablePorts, port)
+		}
+		return true // return true to continue iterating over the map
+	})
 
 	// Randomly select an available port
 	randomPort := availablePorts[rand.Intn(len(availablePorts))]
 
-	return m.TorInstances[randomPort], randomPort, nil
+	t, _ := m.TorInstances.Load(randomPort)
+
+	return t.(*tor.Tor), randomPort, nil
 
 }
 
@@ -75,7 +93,8 @@ func (m *Manager) CreateNewTorInstance() (*tor.Tor, int, error) {
 	log.Println("Started Tor instance on port: ", port)
 
 	// Store the new Tor instance
-	m.TorInstances[port] = torInstance
+	m.TorInstances.Swap(port, torInstance)
+
 	return torInstance, port, nil
 }
 
@@ -94,10 +113,6 @@ func (m *Manager) StartTorInstance(port int) (*tor.Tor, error) {
 		return nil, fmt.Errorf("failed to start Tor on port %d: %v", port, err)
 	}
 
-	//err = t.Process.Start()
-	//if err != nil {
-	//	return nil, fmt.Errorf("failed to start Tor on port %d: %v", port, err)
-	//}
 	err = t.EnableNetwork(context.Background(), true)
 	if err != nil {
 		return nil, fmt.Errorf("failed to start Tor on port %d: %v", port, err)

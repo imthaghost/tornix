@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/cretz/bine/tor"
@@ -27,7 +26,7 @@ func (m *Manager) StartNewSession() (string, *http.Client, error) {
 	log.Print("Starting new session")
 	// Check if the maximum limit has been reached
 
-	if getSyncMapLength(m.Sessions) >= m.MaxConcurrentSessions {
+	if GetSyncMapLength(m.Sessions) >= m.MaxConcurrentSessions {
 		return "", nil, fmt.Errorf("maximum number of concurrent sessions reached")
 
 	}
@@ -50,6 +49,12 @@ func (m *Manager) StartNewSession() (string, *http.Client, error) {
 	}
 	log.Println("Proxy URL: ", proxyURL)
 
+	// Retrieve the Tor instance associated with the selected port
+	torInstance, exists := m.TorInstances.Load(socksPort)
+	if !exists {
+		return "", nil, fmt.Errorf("no Tor instance found for port %d", socksPort)
+	}
+
 	// Create a new HTTP client with the proxy URL
 	client := &http.Client{
 		Transport: &http.Transport{
@@ -58,8 +63,11 @@ func (m *Manager) StartNewSession() (string, *http.Client, error) {
 	}
 
 	// Store the client and Tor instance in Sessions
-	m.Sessions.Swap(uniqueID, SessionInfo{Client: client,
-		TorPort: socksPort})
+	m.Sessions.Store(uniqueID, SessionInfo{
+		Client:      client,
+		TorPort:     socksPort,
+		TorInstance: torInstance.(*tor.Tor),
+	})
 
 	// Start a goroutine for session timeout
 	go func(uid string) {
@@ -79,22 +87,11 @@ func (m *Manager) EndSession(uniqueID string) {
 			transport.CloseIdleConnections()
 		}
 
-		// Stop the Tor instance on the session's SOCKS port
-		if torInstance, ok := m.TorInstances[sessionInfo.(SessionInfo).TorPort]; ok {
-			torInstance.Close()                                       // Close the Tor instance
-			delete(m.TorInstances, sessionInfo.(SessionInfo).TorPort) // Remove the instance from the map
+		if sessionInfo.(SessionInfo).TorInstance != nil {
+			sessionInfo.(SessionInfo).TorInstance.Close()
 		}
 
 		m.ReleasePort(sessionInfo.(SessionInfo).TorPort) // Release the port
 		m.Sessions.Delete(uniqueID)                      // Remove the session from the map
 	}
-}
-
-func getSyncMapLength(m *sync.Map) int {
-	length := 0
-	m.Range(func(_, _ interface{}) bool {
-		length++
-		return true
-	})
-	return length
 }

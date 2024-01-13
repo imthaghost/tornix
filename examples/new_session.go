@@ -14,15 +14,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var activePort int
-	// find active tor instance from manager
-	for port := range manager.TorInstances {
-		log.Println("port: ", port)
-		activePort = port
-	}
+	manager.Sessions.Range(func(key, value interface{}) bool {
+		log.Println(key, value)
+		return true
+	})
 
-	active := tornix.IsTorRunning(activePort)
-	log.Println("active: ", active)
 	resp, err := client1.Get("https://checkip.amazonaws.com")
 	if err != nil {
 		log.Fatal(err)
