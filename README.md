@@ -2,10 +2,8 @@
     <img alt="net" src="docs/media/network.png"> 
 </p>
 <p align="center">
-Tornix, an advanced yet user-friendly tool, revolutionizes the way users interact with the Tor network by offering sophisticated stream isolation capabilities.
-Designed for both privacy enthusiasts and security professionals, Tornix simplifies the process of securely routing various types of internet traffic through distinct Tor circuits. 
-This method not only enhances privacy by preventing the correlation of different activities but also bolsters security by isolating each data stream. 
-With Tornix, users gain the power to efficiently manage and protect their online presence on the Tor network, ensuring each action remains discreet and secure.
+Tornix is a user-friendly tool that enhances privacy and security on the Tor network by providing easy-to-manage stream isolation, 
+enabling users to route their internet traffic securely through separate Tor circuits for discrete, protected online activities.
 
 </p>
 <p align="center">
