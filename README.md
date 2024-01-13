@@ -15,16 +15,53 @@ With Tornix, users gain the power to efficiently manage and protect their online
 </p>
 <br>
 
-# Features
 
-# 🚀 Installation
-```bash
+# Usage
+```go
 
-go get github.com/imthaghost/tornix
+import (
+	"github.com/imthaghost/tornix"
+)
 
 ```
-# Overview
+```bash
+go get "github.com/imthaghost/tornix"
+
+```
 
 # Examples
 
+```go
+package main
+
+import (
+	"io"
+	"log"
+
+	"github.com/imthaghost/tornix"
+)
+
+func main() {
+	// include the max concurrent sessions
+	manager := tornix.NewManager(10)
+	// start a new session
+	session, client, err := manager.StartNewSession()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// check your client's IP with AWS
+	resp, err := client.Get("https://checkip.amazonaws.com")
+	if err != nil {
+		log.Fatal(err)
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println(string(body))
+	// 185.220.100.254
+}
+```
 
