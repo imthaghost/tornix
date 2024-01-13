@@ -1,26 +1,29 @@
 package tornix
 
 import (
-	"github.com/cretz/bine/tor"
 	"sync"
+
+	"github.com/cretz/bine/tor"
 )
 
 // Manager manages the ports used by the proxy.
 type Manager struct {
-	ActiveSessions        map[string]SessionInfo // Keeps track of active sessions
-	UsedPorts             map[int]bool           // Keeps track of used ports
-	TorInstances          map[int]*tor.Tor       // Keeps track of active Tor instances
-	MaxConcurrentSessions int                    // Max concurrent sessions
+	Sessions              *sync.Map        // Keeps track of active sessions
+	UsedPorts             *sync.Map        // Keeps track of used ports
+	TorInstances          map[int]*tor.Tor // Keeps track of active Tor instances
+	MaxConcurrentSessions int              // Max concurrent sessions
 
-	mu sync.Mutex // Mutex for thread safety
 }
 
 // NewManager returns a new Manager.
 func NewManager(maxSessions int) *Manager {
+	portsMap := &sync.Map{}
+
+	sessionsMap := &sync.Map{}
 	return &Manager{
-		ActiveSessions:        make(map[string]SessionInfo),
+		Sessions:              sessionsMap,
 		TorInstances:          make(map[int]*tor.Tor),
-		UsedPorts:             make(map[int]bool),
+		UsedPorts:             portsMap,
 		MaxConcurrentSessions: maxSessions,
 	}
 }

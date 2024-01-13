@@ -8,9 +8,6 @@ import (
 
 // ReleasePort releases a port for use by the proxy.
 func (m *Manager) ReleasePort(port int) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
 	// Close any active Tor instance using this port
 	if torInstance, exists := m.TorInstances[port]; exists {
 		// Assume that torInstance has a method to stop the Tor process
@@ -22,7 +19,8 @@ func (m *Manager) ReleasePort(port int) {
 	}
 
 	// Mark the port as available again
-	delete(m.UsedPorts, port)
+	m.UsedPorts.Delete(port)
+
 }
 
 // IsPortAvailable returns true if the port is available for use.
@@ -41,12 +39,15 @@ func IsPortAvailable(port int) bool {
 
 // AcquirePort acquires a port for use by the proxy.
 func (m *Manager) AcquirePort() (int, error) {
-
 	for port := 10000; port < 65535; port++ {
-		if !m.UsedPorts[port] && IsPortAvailable(port) {
-			m.UsedPorts[port] = true
+
+		_, inUse := m.UsedPorts.Load(port)
+		// check if port is available and not in use
+		if IsPortAvailable(port) && !inUse {
+			m.UsedPorts.Store(port, true)
 			return port, nil
 		}
+
 	}
 
 	return 0, errors.New("no available ports")

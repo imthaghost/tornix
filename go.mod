@@ -9,6 +9,7 @@ require (
 
 require (
 	github.com/cretz/bine v0.2.0 // indirect
+	github.com/google/uuid v1.5.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/orcaman/concurrent-map/v2 v2.0.1 // indirect
