@@ -14,7 +14,7 @@ import (
 	"github.com/cretz/bine/tor"
 )
 
-const MaxSessionsPerTorInstance = 1
+const MaxSessionsPerTorInstance = 10
 
 // TorProxyFunc returns a proxy function for the Tor instance running on the host machine.
 func (m *Manager) TorProxyFunc(id string) (*url.URL, int, error) {
@@ -37,7 +37,7 @@ func (m *Manager) TorProxyFunc(id string) (*url.URL, int, error) {
 	}
 
 	// Create the proxy URL using the selected Tor instance's SOCKS port
-	proxyURLString := fmt.Sprintf("socks5://127.0.0.1:%d", selectedPort)
+	proxyURLString := fmt.Sprintf("socks5://%s:x@127.0.0.1:%d", id, selectedPort)
 	proxyURL, err := url.Parse(proxyURLString)
 	if err != nil {
 		return nil, 0, fmt.Errorf("error parsing proxy URL: %w", err)
